@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+	<head>
+		<link href="https://s3.amazonaws.com/codecademy-content/projects/bootstrap.min.css" rel="stylesheet" />
+		<link href="css/main.css" rel="stylesheet" />
+
+		<!-- Include the AngularJS library -->
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+	</head>
+	<body ng-app="WeatherApp">
+
+		<div class="main" ng-controller="weatherController">
+			<div class="ip" ng-show="ipAddressFound">
+				<div>
+					Your ip Address is : {{ ipAddress }}
+				</div>
+				<div>
+					Your location based on your ip Address is, City: {{ ipCity }} , State: {{ ipState }} , Zip Code: {{ ipZipCode }}
+				</div>
+			</div>
+			<div>
+				<form name="frmWeather" ng-submit="getWeather()">
+					<label>Zip Code</label>
+					<input name="zipCode" type="text" ng-model="zip" pattern="^\d{5}" placeholder="{{ zipPlaceholder }}" required />
+					<button type="submit">Check Weather</button>
+					<button type="button" ng-click="isSearchActive = false; error = '';">Clear</button>
+					<span class="error">{{ error }}</span>
+				</form>
+			</div>
+
+			<div class="weather">
+				<div ng-repeat="day in weatherDays">
+					<day-weather info="day"></day-weather>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modules -->
+		<script src="js/app.js"></script>
+
+		<!-- Controllers -->
+		<script src="js/controllers/weatherController.js"></script>
+
+		<!-- Directives -->
+		<script src="js/directives/dayWeather.js"></script>
+
+		<!-- Services -->
+		<script src="js/services/weather.js"></script>
+
+	</body>
+</html>
