@@ -8,11 +8,11 @@ app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Methods', 'GET');
 	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 	next();
-})
+});
 
 app.get('/', function (req, res) {
 	res.send('Weather api is running');
-})
+});
 
 app.get('/weather/:zip(\\d{5}).json', function (req, res) {
 	//console.log('Received request for zip: ' + req.params.zip);
@@ -30,8 +30,8 @@ app.get('/weather/:zip(\\d{5}).json', function (req, res) {
 		}, function(locationError) {
 			console.log(locationError);
 			res.end();
-		})
-})
+		});
+});
 
 var server = app.listen(8081, function () {
 
@@ -39,14 +39,14 @@ var server = app.listen(8081, function () {
 	var port = server.address().port;
 	console.log('Weather api listening at http://%s:%s', host, port);
 	console.log(server.address());
-})
+});
 
 function getLocation(zip) {
 	var def = q.defer();
 	var options = {
 		host: 'api.wunderground.com',
 		path: '/api/eead2485276469ce/geolookup/q/' + zip + '.json'
-	}
+	};
 
 	http.get(options, function (response) {
 		var body = '';
@@ -63,7 +63,6 @@ function getLocation(zip) {
 		});
 	});
 	return def.promise;
-	
 }
 
 function getForecast(city, state) {
@@ -85,6 +84,6 @@ function getForecast(city, state) {
 		response.on('error', function (err) {
 			def.reject(err);
 		});
-	})
+	});
 	return def.promise;
 }
