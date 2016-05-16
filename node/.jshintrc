@@ -1,0 +1,36 @@
+{
+  "bitwise": true,
+  "camelcase": true,
+  "eqeqeq": true,
+  "forin": true,
+  "indent": 2,
+  "latedef": "nofunc",
+  "node": true,
+  "quotmark": "single",
+  "strict": true,
+  "trailing": true,
+  "undef": true,
+  "unused": true,
+  "globals": {
+    "__filename": true,
+    "__dirname": true,
+
+    "describe": true,
+    "assert": true,
+    "it": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "expect": true,
+    "supertest": true,
+    "global": true,
+    "nock": true,
+    "sinon": true,
+    "chai": true,
+    "proxyquire": true,
+    "mockPromises": true,
+    "Proxy": true,
+    "Promise"   : true
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "weather",
+  "description": "Weather API",
+  "version": "1.0.0",
+  "author": "kcarroll-medseek",
+  "branch": "master",
+  "dependencies": {
+    "express": "~3.4.4",
+    "q": "~0.9.7"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.2"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kcarroll-medseek/weather"
+  },
+  "engines": {
+    "node": ">=0.10.21"
+  },
+  "scripts": {
+    "jshint": "node node_modules/jshint/bin/jshint -c config/.jshintrc api app test app.js"
+  }
+}

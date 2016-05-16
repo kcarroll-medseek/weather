@@ -1,3 +1,4 @@
+'use strict';
 var express = require('express'),
 	http = require('http'),
 	q = require('q'),
@@ -53,7 +54,7 @@ function getLocation(zip) {
 		response.on('data', function (d) {
 			body += d;
 		});
-		response.on('end', function (d) {
+		response.on('end', function () {
 			var locationData = JSON.parse(body);
 			if (!locationData || !locationData.location) {
 				def.reject('No location data found for ' + zip);
@@ -78,7 +79,7 @@ function getForecast(city, state) {
 		response.on('data', function (d) {
 			body += d;
 		});
-		response.on('end', function (d) {
+		response.on('end', function () {
 			def.resolve(body);
 		});
 		response.on('error', function (err) {
