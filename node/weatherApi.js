@@ -1,5 +1,6 @@
 var express = require('express'),
 	http = require('http'),
+	q = require('q'),
 	app = express();
 
 app.use(function (req, res, next) {
@@ -15,18 +16,26 @@ app.get('/', function (req, res) {
 
 app.get('/weather/:zip(\\d{5}).json', function (req, res) {
 	console.log('Received request for zip: ' + req.params.zip);
-	getLocation(req.params.zip, res);
+	getLocation(req.params.zip)
+	.then(function(locationData){
+		console.log(locationData.city + ' ' + locationData.state);
+		getForecast(locationData.city, locationData.state, res);
+	}, function(locationError) {
+		console.log(locationError);
+		res.end();
+	});
 })
 
 var server = app.listen(8081, function () {
 
-	var host = server.address().address
-	var port = server.address().port
-	console.log('Weather api listening at http://%s:%s', host, port)
-	console.log(server.address())
+	var host = server.address().address;
+	var port = server.address().port;
+	console.log('Weather api listening at http://%s:%s', host, port);
+	console.log(server.address());
 })
 
-function getLocation(zip, res) {
+function getLocation(zip) {
+	var def = q.defer();
 	var options = {
 		host: 'api.wunderground.com',
 		path: '/api/eead2485276469ce/geolookup/q/' + zip + '.json'
@@ -40,12 +49,14 @@ function getLocation(zip, res) {
 		response.on('end', function (d) {
 			var locationData = JSON.parse(body);
 			if (!locationData || !locationData.location) {
-				res.end();
-				return;
+				def.reject('No location data found for ' + zip);
+			} else {
+				def.resolve(locationData.location);
 			}
-			getForecast(locationData.location.city, locationData.location.state, res);
 		});
 	});
+	return def.promise;
+	
 }
 
 function getForecast(city, state, res) {
