@@ -15,15 +15,22 @@ app.get('/', function (req, res) {
 })
 
 app.get('/weather/:zip(\\d{5}).json', function (req, res) {
-	console.log('Received request for zip: ' + req.params.zip);
+	//console.log('Received request for zip: ' + req.params.zip);
 	getLocation(req.params.zip)
-	.then(function(locationData){
-		console.log(locationData.city + ' ' + locationData.state);
-		getForecast(locationData.city, locationData.state, res);
-	}, function(locationError) {
-		console.log(locationError);
-		res.end();
-	});
+		.then(function(locationData){
+			//console.log(locationData.city + ' ' + locationData.state);
+			getForecast(locationData.city, locationData.state)
+				.then(function(forecastData){
+					res.send(forecastData);
+				}, function(forecastError) {
+					console.log(forecastError);
+					res.status(500);
+					res.send(forecastError);
+				});
+		}, function(locationError) {
+			console.log(locationError);
+			res.end();
+		})
 })
 
 var server = app.listen(8081, function () {
@@ -59,7 +66,9 @@ function getLocation(zip) {
 	
 }
 
-function getForecast(city, state, res) {
+function getForecast(city, state) {
+	console.log('getForecast: ' + city + ' ' + state);
+	var def = q.defer();
 	var options = {
 		host: 'api.wunderground.com',
 		path: '/api/eead2485276469ce/forecast/q/' + state + '/' + city.replace(' ', '_') + '.json'
@@ -71,7 +80,11 @@ function getForecast(city, state, res) {
 			body += d;
 		});
 		response.on('end', function (d) {
-			res.send(body);
+			def.resolve(body);
+		});
+		response.on('error', function (err) {
+			def.reject(err);
 		});
 	})
+	return def.promise;
 }
